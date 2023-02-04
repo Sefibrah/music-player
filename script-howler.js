@@ -124,8 +124,10 @@ if (typeof document.hidden !== "undefined") {
 document.addEventListener(
 	visibilityChange,
 	() => {
-		pause();
-		play();
+		if (document[hidden]) {
+			// pause();
+			play();
+		}
 	},
 	false
 );
