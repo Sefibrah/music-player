@@ -98,3 +98,36 @@ prevBtn.addEventListener("click", function () {
 		}
 	}, 5000);
 });
+
+// use the Page Visibility API to pause the interval when the page is hidden
+// and resume it when the page becomes visible again
+let hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") {
+	hidden = "hidden";
+	visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+	hidden = "msHidden";
+	visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+	hidden = "webkitHidden";
+	visibilityChange = "webkitvisibilitychange";
+}
+
+document.addEventListener(
+	visibilityChange,
+	function () {
+		// if (document[hidden]) {
+		//   howl.pause();
+		//   clearInterval(intervalId);
+		// } else {
+		//   howl.play();
+		if (intervalId === null) {
+			intervalId = setInterval(() => {
+				currentSound = (currentSound + 1) % sounds.length;
+				sounds[currentSound].play();
+			}, 5000);
+		}
+		// }
+	},
+	false
+);
