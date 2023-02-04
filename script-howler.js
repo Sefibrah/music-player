@@ -35,31 +35,39 @@ var currentSound = 0;
 var playing = false;
 var intervalId = null;
 
+function pause() {
+	musicContainer.classList.remove("play");
+	playBtn.querySelector("i.fas").classList.add("fa-play");
+	playBtn.querySelector("i.fas").classList.remove("fa-pause");
+
+	sounds[currentSound].pause();
+	playing = false;
+	clearInterval(intervalId);
+}
+
+function play() {
+	musicContainer.classList.add("play");
+	playBtn.querySelector("i.fas").classList.remove("fa-play");
+	playBtn.querySelector("i.fas").classList.add("fa-pause");
+	sounds[currentSound].play();
+	playing = true;
+	title.innerText = currentSound + 1;
+	intervalId = setInterval(function () {
+		if (!sounds[currentSound].playing()) {
+			sounds[currentSound].stop();
+			currentSound = (currentSound + 1) % sounds.length;
+			title.innerText = currentSound + 1;
+			sounds[currentSound].play();
+			playing = true;
+		}
+	}, 5000);
+}
+
 playBtn.addEventListener("click", function () {
 	if (playing) {
-		musicContainer.classList.remove("play");
-		playBtn.querySelector("i.fas").classList.add("fa-play");
-		playBtn.querySelector("i.fas").classList.remove("fa-pause");
-
-		sounds[currentSound].pause();
-		playing = false;
-		clearInterval(intervalId);
+		pause();
 	} else {
-		musicContainer.classList.add("play");
-		playBtn.querySelector("i.fas").classList.remove("fa-play");
-		playBtn.querySelector("i.fas").classList.add("fa-pause");
-		sounds[currentSound].play();
-		playing = true;
-		title.innerText = currentSound + 1;
-		intervalId = setInterval(function () {
-			if (!sounds[currentSound].playing()) {
-				sounds[currentSound].stop();
-				currentSound = (currentSound + 1) % sounds.length;
-				title.innerText = currentSound + 1;
-				sounds[currentSound].play();
-				playing = true;
-			}
-		}, 5000);
+		play();
 	}
 });
 
@@ -116,20 +124,8 @@ if (typeof document.hidden !== "undefined") {
 document.addEventListener(
 	visibilityChange,
 	() => {
-		clearInterval(intervalId);
-		sounds[currentSound].pause();
-		sounds[currentSound].play();
-		playing = true;
-		title.innerText = currentSound + 1;
-		intervalId = setInterval(function () {
-			if (!sounds[currentSound].playing()) {
-				sounds[currentSound].stop();
-				currentSound = (currentSound + 1) % sounds.length;
-				title.innerText = currentSound + 1;
-				sounds[currentSound].play();
-				playing = true;
-			}
-		}, 5000);
+		pause();
+		play();
 	},
 	false
 );
