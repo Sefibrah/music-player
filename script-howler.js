@@ -116,6 +116,7 @@ if (typeof document.hidden !== "undefined") {
 document.addEventListener(
 	visibilityChange,
 	() => {
+		clearInterval(intervalId);
 		sounds[currentSound].pause();
 		sounds[currentSound].play();
 		playing = true;
