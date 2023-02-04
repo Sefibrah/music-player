@@ -124,8 +124,11 @@ if (typeof document.hidden !== "undefined") {
 document.addEventListener(
 	visibilityChange,
 	() => {
-		if (document[hidden]) {
-			// pause();
+		if (playing && document[hidden]) {
+			currentSecond = sounds[currentSound].seek();
+			pause();
+			sounds[currentSound].seek(currentSecond);
+			sounds[currentSound].play();
 			play();
 		}
 	},
