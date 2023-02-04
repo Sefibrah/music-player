@@ -115,19 +115,20 @@ if (typeof document.hidden !== "undefined") {
 
 document.addEventListener(
 	visibilityChange,
-	function () {
-		// if (document[hidden]) {
-		//   howl.pause();
-		//   clearInterval(intervalId);
-		// } else {
-		//   howl.play();
-		if (intervalId === null) {
-			intervalId = setInterval(() => {
+	() => {
+		sounds[currentSound].pause();
+		sounds[currentSound].play();
+		playing = true;
+		title.innerText = currentSound + 1;
+		intervalId = setInterval(function () {
+			if (!sounds[currentSound].playing()) {
+				sounds[currentSound].stop();
 				currentSound = (currentSound + 1) % sounds.length;
+				title.innerText = currentSound + 1;
 				sounds[currentSound].play();
-			}, 5000);
-		}
-		// }
+				playing = true;
+			}
+		}, 5000);
 	},
 	false
 );
