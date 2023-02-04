@@ -1,3 +1,6 @@
+var context = new (window.AudioContext || window.webkitAudioContext)();
+context.suspend();
+
 var sounds = [
 	new Howl({ src: "mp3/1.mp3" }),
 	new Howl({ src: "mp3/2.mp3" }),
@@ -43,6 +46,7 @@ function pause() {
 	sounds[currentSound].pause();
 	playing = false;
 	clearInterval(intervalId);
+  context.suspend();
 }
 
 function play() {
@@ -52,6 +56,7 @@ function play() {
 	sounds[currentSound].play();
 	playing = true;
 	title.innerText = currentSound + 1;
+	context.resume();
 	intervalId = setInterval(function () {
 		if (!sounds[currentSound].playing()) {
 			sounds[currentSound].stop();
@@ -109,28 +114,28 @@ prevBtn.addEventListener("click", function () {
 
 // use the Page Visibility API to pause the interval when the page is hidden
 // and resume it when the page becomes visible again
-let hidden, visibilityChange;
-if (typeof document.hidden !== "undefined") {
-	hidden = "hidden";
-	visibilityChange = "visibilitychange";
-} else if (typeof document.msHidden !== "undefined") {
-	hidden = "msHidden";
-	visibilityChange = "msvisibilitychange";
-} else if (typeof document.webkitHidden !== "undefined") {
-	hidden = "webkitHidden";
-	visibilityChange = "webkitvisibilitychange";
-}
+// let hidden, visibilityChange;
+// if (typeof document.hidden !== "undefined") {
+// 	hidden = "hidden";
+// 	visibilityChange = "visibilitychange";
+// } else if (typeof document.msHidden !== "undefined") {
+// 	hidden = "msHidden";
+// 	visibilityChange = "msvisibilitychange";
+// } else if (typeof document.webkitHidden !== "undefined") {
+// 	hidden = "webkitHidden";
+// 	visibilityChange = "webkitvisibilitychange";
+// }
 
-document.addEventListener(
-	visibilityChange,
-	() => {
-		if (playing && document[hidden]) {
-			currentSecond = sounds[currentSound].seek();
-			pause();
-			sounds[currentSound].seek(currentSecond);
-			sounds[currentSound].play();
-			play();
-		}
-	},
-	false
-);
+// document.addEventListener(
+// 	visibilityChange,
+// 	() => {
+// 		if (playing && document[hidden]) {
+// 			currentSecond = sounds[currentSound].seek();
+// 			pause();
+// 			sounds[currentSound].seek(currentSecond);
+// 			sounds[currentSound].play();
+// 			play();
+// 		}
+// 	},
+// 	false
+// );
